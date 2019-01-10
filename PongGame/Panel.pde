@@ -18,7 +18,7 @@ class Panel {
 
   void show() {
     fill(0);
-    stroke(255);
+    stroke(40);
     rect(xOffset + x, yOffset + y, unit, unit);
   }
 }

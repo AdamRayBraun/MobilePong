@@ -4,25 +4,31 @@ class Puck {
   float y = width/2;
   float r = 15;
 
-  float xspeed = 15;
-  float yspeed = 15;
+  float xspeed;
+  float yspeed;
+
+  Puck() {
+    reset();
+  }
 
     // if puck hits paddle
     void checkPaddleOne(Paddle p) {
-      //  puck position in paddle y position
       if (y < p.y + p.h/2 &&
           y > p.y - p.h/2 &&
           x - r < p.x + p.w/2) {
-            xspeed *= -1;
+            if (x > p.x) {
+              xspeed *= -1;
+            }
         }
       }
 
     void checkPaddleTwo(Paddle p) {
-      //  puck position in paddle y position
       if (y < p.y + p.h/2 &&
           y > p.y - p.h/2 &&
           x + r > p.x - p.w/2) {
-            xspeed *= -1;
+            if (x < p.x) {
+              xspeed *= -1;
+            }
         }
       }
 
@@ -35,6 +41,13 @@ class Puck {
   void reset() {
     x = width/2;
     y = height/2;
+    float angle = random(-PI/4, PI/4);
+    xspeed = 15 * cos(angle);
+    yspeed = 15 * sin(angle);
+
+    if (random(1) < 0.5) {
+      xspeed *= -1;
+    }
   }
 
   void edges() {
@@ -44,11 +57,13 @@ class Puck {
     }
 
     // if player 1 scores
-    if (x > width) {
+    if (x - r > width) {
+      playerOneScore++;
       reset();
     }
     // if player 2 scores
-    if (x < 0) {
+    if (x + r < 0) {
+      playerTwoScore++;
       reset();
     }
   }

@@ -1,13 +1,15 @@
 class Paddle {
   float x;
   float y = height/2;
-  float w = 100;
-  float h = 500;
+  float w;
+  float h;
 
   float ychange= 0;
 
-  Paddle(int playerNumber) {
+  Paddle(int playerNumber, int unit) {
     // paddle positioning
+    w = unit * 3;
+    h = unit * 20;
     if (playerNumber == 1) {
       x = w;
     } else {

@@ -1,16 +1,41 @@
+boolean keyboardDebugging = true;
+
+// Panel vars
 int wideCount = 64;
 int highCount = 64;
 int unit;
 int count;
 Panel[] panels;
+
+//puck
 Puck puck;
 
-// player 1 is left paddle / 2 is right
+// Paddles
+//player 1 is left paddle / 2 is right
 Paddle playerOne;
 Paddle playerTwo;
 
+//High scores
+HighScore[] highScores;
+
+// game logic vars
+int playerOneScore = 0;
+int playerTwoScore = 0;
+int mostRecentWinner;
+int maxPoints = 3;
+boolean startSelected = true;
+boolean homeSelected = true;
+
+
+// 0 home screen
+// 1 pong game
+// 2 game over
+// 3 highscore
+int gameMode = 0;
+
+
 void setup() {
-  size(2000, 2000);
+  size(1000, 1000);
 
   // find size of a Panel
   unit = width / wideCount;
@@ -26,10 +51,17 @@ void setup() {
     }
   }
 
+  // initiate high score array with zeros
+  highScores = new HighScore[10];
+  for (int x=0; x<10; x++) {
+    highScores[x] = new HighScore("NUN", 0);
+  }
+
+
   puck = new Puck();
 
-  playerOne = new Paddle(1);
-  playerTwo = new Paddle(2);
+  playerOne = new Paddle(1, unit);
+  playerTwo = new Paddle(2, unit);
 }
 
 
@@ -40,36 +72,156 @@ void draw() {
     panel.show();
   }
 
-  puck.checkPaddleOne(playerOne);
-  puck.checkPaddleTwo(playerTwo);
+  switch(gameMode){
+    case 0:
+      // HOME SCREEN
+      textSize(80);
+      if (startSelected == true) {
+        fill(255);
+      } else {
+        fill(150);
+      }
+      textAlign(CENTER,CENTER);
+      text("Start", width/2,height/2);
+      textSize(50);
+      if (startSelected == false) {
+        fill(255);
+      } else {
+        fill(150);
+      }
+      text("High Scores", width/2,height/2 + 100);
+      break;
 
-  playerOne.show();
-  playerTwo.show();
-  playerOne.update();
-  playerTwo.update();
+    case 1:
+      // PONG GAME
+      puck.checkPaddleOne(playerOne);
+      puck.checkPaddleTwo(playerTwo);
+
+      playerOne.show();
+      playerTwo.show();
+      playerOne.update();
+      playerTwo.update();
 
 
-  puck.update();
-  puck.edges();
-  puck.show();
+      puck.update();
+      puck.edges();
+      puck.show();
+
+      //scores
+      fill(255);
+      textSize(40);
+      text(playerOneScore, 10, 40);
+      text(playerTwoScore, width - 60, 40);
+
+      if (playerOneScore == maxPoints) {
+        mostRecentWinner = 1;
+        gameMode = 2;
+        playerOneScore = 0;
+        playerTwoScore = 0;
+      } else if (playerTwoScore == maxPoints) {
+        mostRecentWinner = 2;
+        gameMode = 2;
+        playerOneScore = 0;
+        playerTwoScore = 0;
+      }
+      break;
+
+    case 2:
+      // GAME OVER
+      fill(255);
+      textSize(100);
+      textAlign(CENTER,CENTER);
+      String winningMessage = "Player " + mostRecentWinner + " wins!";
+      text(winningMessage, width/2, height/4);
+      textSize(80);
+      if (homeSelected == true) {
+        fill(255);
+      } else {
+        fill(150);
+      }
+      text("Home", width/2, height/2);
+      if (homeSelected == false) {
+        fill(255);
+      } else {
+        fill(150);
+      }
+      text("High Scores", width/2, height/2 + 150);
+      break;
+
+    case 3:
+      // HIGHSCORES
+      fill(255);
+      text("High scores", width/2, 40);
+      textSize(30);
+      for (int x = 0; x<10; x++) {
+        int highScoreIndex = x+1;
+        String highScoreMessage = highScoreIndex + "  " + highScores[x].name + "  " + highScores[x].score;
+        text(highScoreMessage, width/2, x*90 + 110);
+      }
+      break;
+  }
 }
 
 void keyReleased(){
-  playerOne.move(0);
-  playerTwo.move(0);
-
+  if (keyboardDebugging == true) {
+    playerOne.move(0);
+    playerTwo.move(0);
+  }
 }
 
 void keyPressed(){
-  if (key == 'a') {
-    playerOne.move(-10);
-  } else if ( key =='z') {
-    playerOne.move(10);
-  }
+  // welcome screen gameMode
+  if (gameMode == 0) {
+    // toggle between start and highscore buttons
+    if (key == CODED) {
+      if (keyCode == UP || keyCode == DOWN) {
+        if (startSelected == true){
+          startSelected = false;
+        } else {
+          startSelected = true;
+        }
+      }
+    }
+    if (key == ENTER) {
+      if (startSelected == true) {
+        gameMode = 1;
+      } else {
+        gameMode = 3;
+      }
+    }
+    // pong game gameMode
+  } else if (gameMode == 1){
+    if (keyboardDebugging == true) {
+      if (key == 'a') {
+        playerOne.move(-20);
+      } else if ( key =='z') {
+        playerOne.move(20);
+      }
 
-  if (key == 's') {
-    playerTwo.move(-10);
-  } else if ( key =='x') {
-    playerTwo.move(10);
+      if (key == 's') {
+        playerTwo.move(-20);
+      } else if ( key =='x') {
+        playerTwo.move(20);
+      }
+    }
+  }
+  // game over screen
+  else if (gameMode == 2) {
+    if (key == CODED) {
+      if (keyCode == UP || keyCode == DOWN) {
+        if (homeSelected == true){
+          homeSelected = false;
+        } else {
+          homeSelected = true;
+        }
+      }
+    }
+    if (key == ENTER) {
+      if (homeSelected == true) {
+        gameMode = 0;
+      } else {
+        gameMode = 3;
+      }
+    }
   }
 }
