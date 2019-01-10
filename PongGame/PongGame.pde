@@ -35,7 +35,7 @@ int gameMode = 0;
 
 
 void setup() {
-  size(1000, 1000);
+  size(1024, 1024);
 
   // find size of a Panel
   unit = width / wideCount;
@@ -222,6 +222,11 @@ void keyPressed(){
       } else {
         gameMode = 3;
       }
+    }
+  }
+  else if (gameMode == 3) {
+    if (key == ENTER) {
+      gameMode = 0;
     }
   }
 }
