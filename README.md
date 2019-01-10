@@ -22,15 +22,17 @@ otherwise the interface will display a "game in progress, please wait" message
 if there's only one player he/she will wait until a second player joins
 once both players are in they stream a message containing the player ID (e.g. player one or player two) and the paddle position
 
-##To Do
+## To Do
 ### ( in order of importance ):
 
 * ~~Basic pong game logic~~
 * ~~Splitting game into home/play/highscore screens~~
 * displaying game in grayscale panels
-* ~~Having winning scores update highscore list (does pong create highscores?)~~
+* ~~Having winning scores update highscore list~~ (does pong create highscores?)
 * Connecting processing server with mobile clients via spacebrew
 * having two mobiles control both paddles simultaneously
+
+* update README with instructions for use / explanation of progress
 
 Bonus points
 * Input from mobile accelerometer
