@@ -29,6 +29,7 @@ On separate devices navigate to the locally hosted folder and open the welcome p
 
 If your paddle is not connecting check the spacrebrew admin at `localhost:9000`
 With two players successfully connected it should appear as so:
+[alt text](https://github.com/AdamRayBraun/MobilePong/blob/master/Spacrebrew%20example.png "Spacebrew connection example")
 
 
 ## My challenge:
