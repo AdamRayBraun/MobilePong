@@ -65,10 +65,10 @@
 	      	console.log("[onButtonPress] button has been pressed");
 					if (numberOfPlayers == 0 || numberOfPlayers == 10) {
 						sb.send("playerOneConnection", "boolean", "true");
-						document.location.href = 'http://192.168.0.28:8000/playerOneController.html';
+						document.location.href = 'http://192.168.0.28:8888/Hirsch%20and%20mann%20challenge/web/PlayerOneController.html';
 					} else if (numberOfPlayers == 1) {
 						sb.send("playerTwoConnection", "boolean", "true");
-						document.location.href = 'http://192.168.0.28:8000/playerTwoController.html';
+						document.location.href = 'http://192.168.0.28:8888/Hirsch%20and%20mann%20challenge/web/PlayerTwoController.html';
 					} else {
 						var message = "Game in progress, please wait";
 						var nameElement = document.getElementById("name");

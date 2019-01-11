@@ -8,6 +8,7 @@ String playerTwoInput = "player2_slider";
 boolean playerOneConnection = false;
 boolean playerTwoConnection = false;
 int numberOfPlayers = 0;
+boolean bothPlayersReady = false;
 int counter = millis();
 
 boolean keyboardDebugging = true;
@@ -29,20 +30,26 @@ Paddle playerTwo;
 
 //High scores
 HighScore[] highScores;
+int potentialScore;
+boolean newHighScore = false;
+int playerOneWins = 0;
+int playerTwoWins = 0;
 
 // game logic vars
 int playerOneScore = 0;
 int playerTwoScore = 0;
 int mostRecentWinner;
-int maxPoints = 5;
+int maxPoints = 4;
 boolean startSelected = true;
-boolean homeSelected = true;
+boolean homeSelected = false;
 
+String startScreenMessage = "Waiting for Players";
 
 // 0 home screen
 // 1 pong game
 // 2 game over
 // 3 highscore
+// 4 new highscore entry
 int gameMode = 0;
 
 
@@ -78,12 +85,13 @@ void setup() {
   for (int x=0; x<10; x++) {
     highScores[x] = new HighScore("NUN", 0);
   }
-
-
   puck = new Puck();
-
   playerOne = new Paddle(1, unit);
   playerTwo = new Paddle(2, unit);
+
+  if (keyboardDebugging == true){
+    readyToPlay(true);
+  }
 }
 
 
@@ -104,7 +112,7 @@ void draw() {
         fill(150);
       }
       textAlign(CENTER,CENTER);
-      text("Start", width/2,height/2);
+      text(startScreenMessage, width/2,height/2);
       textSize(50);
       if (startSelected == false) {
         fill(255);
@@ -132,19 +140,23 @@ void draw() {
       //scores
       fill(255);
       textSize(40);
-      text(playerOneScore, 10, 40);
-      text(playerTwoScore, width - 60, 40);
+      text("points: " + playerOneScore, 100, 50);
+      text("points: " + playerTwoScore, width - 100, 50);
+
+      text("wins: " + playerOneWins, 100, 100);
+      text("wins: " + playerTwoWins, width - 100, 100);
+
 
       if (playerOneScore == maxPoints) {
-        mostRecentWinner = 1;
         gameMode = 2;
         playerOneScore = 0;
         playerTwoScore = 0;
+        winCounter(1);
       } else if (playerTwoScore == maxPoints) {
-        mostRecentWinner = 2;
         gameMode = 2;
         playerOneScore = 0;
         playerTwoScore = 0;
+        winCounter(2);
       }
       break;
 
@@ -161,13 +173,13 @@ void draw() {
       } else {
         fill(150);
       }
-      text("Home", width/2, height/2);
+      text("Home", width/2, height/2+ 150);
       if (homeSelected == false) {
         fill(255);
       } else {
         fill(150);
       }
-      text("High Scores", width/2, height/2 + 150);
+      text("Rematch!", width/2, height/2);
       break;
 
     case 3:
@@ -181,11 +193,82 @@ void draw() {
         text(highScoreMessage, width/2, x*90 + 110);
       }
       break;
+    case 4:
+        // New HIGHSCORES
+        fill(255);
+        text("High scores", width/2, 40);
+        textSize(30);
+        newHighScore = false;
+        for (int x = 0; x<10; x++) {
+          int highScoreIndex = x+1;
+          String highScoreMessage = highScoreIndex + "  " + highScores[x].name + "  " + highScores[x].score;
+          text(highScoreMessage, width/2, x*90 + 110);
+        }
+      break;
   }
 
   if (millis() > counter + 1000){
     broadcastConnections();
     counter = millis();
+  }
+
+  if (numberOfPlayers == 2){
+    bothPlayersReady = true;
+  } else {
+    bothPlayersReady = false;
+  }
+}
+
+void winCounter(int winner){
+  if (mostRecentWinner == 0){
+    mostRecentWinner = winner;
+    if (winner == 1){
+      playerOneWins++;
+    } else if (winner == 2){
+      playerTwoWins++;
+    }
+  } else if (mostRecentWinner == 1 ){
+      if (winner == 1) {
+        playerOneWins++;
+      } else if (winner == 2) {
+        playerOneWins = 0;
+        playerTwoWins = 1;
+        mostRecentWinner = 2;
+      }
+    } else if (mostRecentWinner == 2){
+      if (winner == 1){
+        playerTwoWins = 0;
+        playerOneWins = 1;
+        mostRecentWinner = 1;
+      } else if (winner == 2){
+        playerTwoWins++;
+    }
+  }
+}
+
+void highScorecheck() {
+  if (mostRecentWinner == 1){
+    potentialScore = playerOneWins;
+  } else if (mostRecentWinner == 2){
+    potentialScore = playerTwoWins;
+  }
+  for (int x =0; x < 10; x++){
+    if (potentialScore > highScores[x].score){
+      newHighScore = true;
+      addNewHighScore(potentialScore);
+    }
+  }
+}
+
+void addNewHighScore(int score) {
+  for (int x=0; x<10; x++){
+    if (score <= highScores[x].score){
+      for (int y = highScores.length-1; y >= max(x,1); y--){
+        highScores[y].score = highScores[y-1].score;
+      }
+      highScores[x].score = score;
+      break;
+    }
   }
 }
 
@@ -199,7 +282,7 @@ void onRangeMessage( String name, int value ){
 }
 
 void onBooleanMessage( String name, boolean value) {
-  println("from " + name + " val " + value);
+  // println("from " + name + " val " + value);
   if (name.equals("playerOneConnected") == true) {
     playerOneConnection = value;
   } else if (name.equals("playerTwoConnected") == true) {
@@ -209,16 +292,32 @@ void onBooleanMessage( String name, boolean value) {
 
 void broadcastConnections(){
   // TODO find more elegant solution for this filthy hack
-  if (playerOneConnection == false && playerTwoConnection == false){
-    numberOfPlayers = 0;
-  } else if (playerOneConnection == true && playerTwoConnection == false){
-    numberOfPlayers = 1;
-  } else if (playerOneConnection == true && playerTwoConnection == true){
-    numberOfPlayers = 2;
-  } else if (playerOneConnection == false && playerTwoConnection == true){
-    numberOfPlayers = 10;
+  if (keyboardDebugging == false){
+    if (playerOneConnection == false && playerTwoConnection == false){
+      numberOfPlayers = 0;
+      readyToPlay(false);
+    } else if (playerOneConnection == true && playerTwoConnection == false){
+      numberOfPlayers = 1;
+      readyToPlay(false);
+    } else if (playerOneConnection == true && playerTwoConnection == true){
+      numberOfPlayers = 2;
+      readyToPlay(true);
+    } else if (playerOneConnection == false && playerTwoConnection == true){
+      numberOfPlayers = 10;
+      readyToPlay(false);
+    }
+    sb.send("numberOfPlayers", numberOfPlayers);
   }
-  sb.send("numberOfPlayers", numberOfPlayers);
+}
+
+void readyToPlay(boolean var) {
+  if (var == true){
+    bothPlayersReady = true;
+    startScreenMessage = "Start!";
+  } else {
+    bothPlayersReady = false;
+    startScreenMessage = "Waiting for Players";
+  }
 }
 
 // Keyboard inputs
@@ -243,7 +342,9 @@ void keyPressed(){
     }
     if (key == ENTER) {
       if (startSelected == true) {
-        gameMode = 1;
+        if (bothPlayersReady == true || keyboardDebugging == true) {
+          gameMode = 1;
+        }
       } else {
         gameMode = 3;
       }
@@ -277,13 +378,24 @@ void keyPressed(){
     }
     if (key == ENTER) {
       if (homeSelected == true) {
-        gameMode = 0;
+        highScorecheck();
+        if (newHighScore == true){
+          gameMode = 4;
+        } else {
+          gameMode = 0;
+          playerOneWins = 0;
+          playerTwoWins = 0;
+        }
       } else {
-        gameMode = 3;
+        gameMode = 1;
       }
     }
   }
   else if (gameMode == 3) {
+    if (key == ENTER) {
+      gameMode = 0;
+    }
+  }  else if (gameMode == 4) {
     if (key == ENTER) {
       gameMode = 0;
     }

@@ -9,8 +9,13 @@ MobilePong uses a [spacebrew](http://docs.spacebrew.cc/) local server to connect
 * In a terminal navigate to spacebrew folder
 * Install NPM dependencies
   * `$ npm install`
-* While still in the spacebrew base directory, run the Server
-  * `node node_server_forever.js`
+* Navigate to `spacebrew/data/persistent_config.json`
+* Replace with contents of `MobilePong/Persistant route data.json`
+* In the spacebrew base directory, run:
+   1. The server `node node_server_forever.js`
+   2. The persistent routes `node node_persistent_admin.js`
+
+
 
 ### 2. Host web interface on local Server
 
@@ -18,7 +23,7 @@ The websites need to be hosted on a local server to be access by the mobile padd
 
 ### 3. Open MobilePong
 
-The main game can be found in `MobilePong/PongGame/PongGame.pde`
+The main game can be found in `MobilePong/PongGame/PongGame.pde` - the menu is navigated with arrow keys and enter.
 
 ### 4. Connect players
 
@@ -63,8 +68,10 @@ once both players are in they stream a message containing the player ID (e.g. pl
 * ~~Having winning scores update highscore list~~ (does pong create highscores?)
 * ~~Connecting processing server with mobile clients via spacebrew~~
 * ~~having two mobiles control both paddles simultaneously~~
-* Add waiting screen to only start game when both players connected
-Update highscores to count consecutive number of wins by a player~~
+* ~~Add waiting screen to only start game when both players connected~~
+* ~~ add persistent spacrebrew routes to recognise any device~~
+* add functionality to enter new highscore
+* Update highscores to count consecutive number of wins by a player
 * Improve pong logic for different angles of reflection from different paddle max points
 
 

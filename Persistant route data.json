@@ -1,0 +1,92 @@
+[{
+  "publisher": {
+    "clientName": "Pong Game",
+    "name": "numberOfPlayers",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong connector",
+    "name": "PlayerNumber",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}, {
+  "publisher": {
+    "clientName": "Pong Connector",
+    "name": "playerOneConnection",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong Game",
+    "name": "playerOneConnected",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}, {
+  "publisher": {
+    "clientName": "Pong Connector",
+    "name": "playerTwoConnection",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong Game",
+    "name": "playerTwoConnected",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}, {
+  "publisher": {
+    "clientName": "Pong Player 1",
+    "name": "PaddleControl",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong Game",
+    "name": "player1_slider",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}, {
+  "publisher": {
+    "clientName": "Pong Player 1",
+    "name": "playerOneConnection",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong Game",
+    "name": "playerOneConnected",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}, {
+  "publisher": {
+    "clientName": "Pong Player 2",
+    "name": "Paddle Control",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong Game",
+    "name": "player2_slider",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}, {
+  "publisher": {
+    "clientName": "Pong Player 2",
+    "name": "playerTwoConnection",
+    "clientRE": {},
+    "nameRE": {}
+  },
+  "subscriber": {
+    "clientName": "Pong Game",
+    "name": "playerTwoConnected",
+    "clientRE": {},
+    "nameRE": {}
+  }
+}]
