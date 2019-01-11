@@ -29,7 +29,7 @@ On separate devices navigate to the locally hosted folder and open the welcome p
 
 If your paddle is not connecting check the spacrebrew admin at `localhost:9000`
 With two players successfully connected it should appear as so:
-[alt text](https://github.com/AdamRayBraun/MobilePong/blob/master/Spacrebrew%20example.png "Spacebrew connection example")
+![alt text](https://github.com/AdamRayBraun/MobilePong/blob/master/Spacrebrew%20example.png "Spacebrew connection example")
 
 
 ## My challenge:
@@ -63,6 +63,12 @@ once both players are in they stream a message containing the player ID (e.g. pl
 * ~~Having winning scores update highscore list~~ (does pong create highscores?)
 * ~~Connecting processing server with mobile clients via spacebrew~~
 * ~~having two mobiles control both paddles simultaneously~~
+* Add waiting screen to only start game when both players connected
+Update highscores to count consecutive number of wins by a player~~
+* Improve pong logic for different angles of reflection from different paddle max points
+
+
+
 
 * ~~update README with instructions for use / explanation of progress~~
 
