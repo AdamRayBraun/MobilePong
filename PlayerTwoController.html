@@ -44,6 +44,7 @@
 			sb.onRangeMessage = onRangeMessage;
 			sb.onOpen = onOpen;
 			sb.onClose = onClose;
+			window.onbeforeunload = closingCode;
 
 			// connect to spacbrew
 			sb.connect();
@@ -61,6 +62,11 @@
 
 		function onClose() {
 			sb.send("playerTwoConnection", "boolean", "false");
+		}
+
+		function closingCode(){
+		   onClose();
+		   return null;
 		}
 
 		/**
