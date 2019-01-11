@@ -1,3 +1,12 @@
+import spacebrew.*;
+String server="192.168.0.28";
+String name="Pong Game";
+String description ="Pong Server";
+Spacebrew sb;
+String playerOneInput = "player1_slider";
+String playerTwoInput = "player2_slider";
+
+
 boolean keyboardDebugging = true;
 
 // Panel vars
@@ -22,7 +31,7 @@ HighScore[] highScores;
 int playerOneScore = 0;
 int playerTwoScore = 0;
 int mostRecentWinner;
-int maxPoints = 3;
+int maxPoints = 5;
 boolean startSelected = true;
 boolean homeSelected = true;
 
@@ -36,6 +45,13 @@ int gameMode = 0;
 
 void setup() {
   size(1024, 1024);
+
+  // instantiate the spacebrewConnection variable
+	sb = new Spacebrew( this );
+  // declare your subscribers
+  sb.addSubscribe( playerOneInput, "range" );
+  sb.addSubscribe( playerTwoInput, "range" );
+	sb.connect(server, name, description );
 
   // find size of a Panel
   unit = width / wideCount;
@@ -162,13 +178,23 @@ void draw() {
   }
 }
 
+// Spacebrew websocket inputs
+void onRangeMessage( String name, int value ){
+	println("got range message " + name + " : " + value);
+  if (playerOneInput.equals(name) == true) {
+    playerOne.slide(value);
+  } else if (playerTwoInput.equals(name) == true) {
+    playerTwo.slide(value);
+  }
+}
+
+// Keyboard inputs
 void keyReleased(){
   if (keyboardDebugging == true) {
     playerOne.move(0);
     playerTwo.move(0);
   }
 }
-
 void keyPressed(){
   // welcome screen gameMode
   if (gameMode == 0) {
