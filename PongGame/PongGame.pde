@@ -186,13 +186,11 @@ void draw() {
   if (millis() > counter + 1000){
     broadcastConnections();
     counter = millis();
-    println(playerOneConnection + " " + playerTwoConnection);
   }
 }
 
 // Spacebrew websocket inputs
 void onRangeMessage( String name, int value ){
-	println("got range message " + name + " : " + value);
   if (name.equals(playerOneInput) == true) {
     playerOne.slide(value);
   } else if (name.equals(playerTwoInput) == true) {
@@ -203,7 +201,6 @@ void onRangeMessage( String name, int value ){
 void onBooleanMessage( String name, boolean value) {
   println("from " + name + " val " + value);
   if (name.equals("playerOneConnected") == true) {
-    println("workinggggggggggggg");
     playerOneConnection = value;
   } else if (name.equals("playerTwoConnected") == true) {
     playerTwoConnection = value;
