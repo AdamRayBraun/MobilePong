@@ -1,5 +1,36 @@
 # MobilePong
 
+## Getting Started
+
+### 1. Run local spacebrew server
+MobilePong uses a [spacebrew](http://docs.spacebrew.cc/) local server to connect the mobile paddle interface with the processing game.
+
+* Download [spacebrew repo](https://github.com/Spacebrew/spacebrew)
+* In a terminal navigate to spacebrew folder
+* Install NPM dependencies
+  * `$ npm install`
+* While still in the spacebrew base directory, run the Server
+  * `node node_server_forever.js`
+
+### 2. Host web interface on local Server
+
+The websites need to be hosted on a local server to be access by the mobile paddles. There are countless methods for this but I found success using XAMPP (and turning my firewall off). Avoid hosting on port 9000 as that is being used by the local spacebrew admin.
+
+### 3. Open MobilePong
+
+The main game can be found in `MobilePong/PongGame/PongGame.pde`
+
+### 4. Connect players
+
+On separate devices navigate to the locally hosted folder and open the welcome page:
+`web/PongConnection.html`
+
+## Troubleshooting
+
+If your paddle is not connecting check the spacrebrew admin at `localhost:9000`
+With two players successfully connected it should appear as so:
+
+
 ## My challenge:
 
 Develop a pong game in Processing: sound easy right ?
@@ -29,10 +60,10 @@ once both players are in they stream a message containing the player ID (e.g. pl
 * ~~Splitting game into home/play/highscore screens~~
 * displaying game in grayscale panels
 * ~~Having winning scores update highscore list~~ (does pong create highscores?)
-* Connecting processing server with mobile clients via spacebrew
-* having two mobiles control both paddles simultaneously
+* ~~Connecting processing server with mobile clients via spacebrew~~
+* ~~having two mobiles control both paddles simultaneously~~
 
-* update README with instructions for use / explanation of progress
+* ~~update README with instructions for use / explanation of progress~~
 
 Bonus points
 * Input from mobile accelerometer
