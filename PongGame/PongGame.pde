@@ -5,6 +5,9 @@ String description ="Pong Server";
 Spacebrew sb;
 String playerOneInput = "player1_slider";
 String playerTwoInput = "player2_slider";
+boolean playerOneConnected = false;
+boolean playerTwoConnected = false;
+int numberOfPlayers = 0;
 
 
 boolean keyboardDebugging = true;
@@ -51,6 +54,9 @@ void setup() {
   // declare your subscribers
   sb.addSubscribe( playerOneInput, "range" );
   sb.addSubscribe( playerTwoInput, "range" );
+  sb.addSubscribe( "playerOneConnected", "boolean");
+  sb.addSubscribe( "playerTwoConnected", "boolean");
+  sb.addPublish( "numberOfPlayers", "range", 0);
 	sb.connect(server, name, description );
 
   // find size of a Panel
@@ -176,16 +182,39 @@ void draw() {
       }
       break;
   }
+  broadcastConnections();
 }
 
 // Spacebrew websocket inputs
 void onRangeMessage( String name, int value ){
 	println("got range message " + name + " : " + value);
-  if (playerOneInput.equals(name) == true) {
+  if (name.equals(playerOneInput) == true) {
     playerOne.slide(value);
-  } else if (playerTwoInput.equals(name) == true) {
+  } else if (name.equals(playerTwoInput) == true) {
     playerTwo.slide(value);
   }
+}
+
+void onBooleanMessage( String name, boolean value) {
+  if (name.equals(playerOneConnected) == true) {
+    playerOneConnected = value;
+  } else if (name.equals(playerOneConnected) == true) {
+    playerTwoConnected = value;
+  }
+}
+
+void broadcastConnections(){
+  // TODO find more elegant solution for this filthy hack
+  if (playerOneConnected == false && playerTwoConnected == false){
+    numberOfPlayers = 0;
+  } else if (playerOneConnected == true && playerTwoConnected == false){
+    numberOfPlayers = 1;
+  } else if (playerOneConnected == true && playerTwoConnected == true){
+    numberOfPlayers = 2;
+  } else if (playerOneConnected == false && playerTwoConnected == true){
+    numberOfPlayers = 10;
+  }
+  sb.send("numberOfPlayers", numberOfPlayers);
 }
 
 // Keyboard inputs

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Spacebrew Sliders (Range Example)</title>
+	<title>Mobile Pong</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
@@ -19,7 +19,7 @@
 
 		// Spacebrew Object
 		var sb
-			, app_name = "slider example"
+			, app_name = "Pong Player"
 			, values = {}
 			;
 
@@ -28,28 +28,22 @@
 		 * 				  It is called when the page loads.
 		 */
 		function setupSpacebrew (){
-			var random_id = "0000" + Math.floor(Math.random() * 10000)
-				;
-
-			app_name = app_name + ' ' + random_id.substring(random_id.length-4);
+			app_name = app_name + " 1";
 
 			console.log("Setting up spacebrew connection");
 			sb = new Spacebrew.Client("192.168.0.28");
 
 			sb.name(app_name);
-			sb.description("Sliders for sending and displaying SpaceBrew range messages.");
+			sb.description("Slider for Pong player to control paddle position");
 
 			// configure the publication and subscription feeds
-			sb.addPublish("slider1", "range", "500");
-			sb.addPublish("slider2", "range", "500");
-			sb.addPublish("slider3", "range", "500");
-			sb.addSubscribe("slider1", "range");
-			sb.addSubscribe("slider2", "range");
-			sb.addSubscribe("slider3", "range");
+			sb.addPublish("PaddleControl", "range", "500");
+			sb.addPublish("playerOneConnection", "boolean", "false");
 
 			// override Spacebrew events - this is how you catch events coming from Spacebrew
 			sb.onRangeMessage = onRangeMessage;
 			sb.onOpen = onOpen;
+			sb.onClose = onClose;
 
 			// connect to spacbrew
 			sb.connect();
@@ -58,12 +52,16 @@
 		/**
 		 * Function that is called when Spacebrew connection is established
 		 */
+
 		function onOpen() {
 			var message = "Connected as <strong>" + sb.name() + "</strong>. ";
-			if (sb.name() === app_name) {
-				message += "<br>You can customize this app's name in the query string by adding <strong>name=your_app_name</strong>."
-			}
 			$("#name").html( message );
+			sb.send("playerOneConnection", "boolean", true);
+			 // TODO if waiting for other player write waiting note
+		}
+
+		function onClose() {
+			sb.send("playerOneConnection", "boolean", false);
 		}
 
 
@@ -82,15 +80,9 @@
 			});
 		}
 
-		/**
-		 * onRangeMessage Function that is called whenever new spacebrew range messages are received.
-		 * 				  It accepts two parameters:
-		 * @param  {String} name  	Holds name of the subscription feed channel
-		 * @param  {Integer} value 	Holds value received from the subscription feed
-		 */
 		function onRangeMessage(name, value){
 			console.log("Received new range message ", value);
-			$("#"+name).slider('refresh', value);
+			// $("#"+name).slider('refresh', value);
 		};
 
     </script>
@@ -100,17 +92,14 @@
 
 <div data-role="page">
 	<div data-role="header">
-		<h1>SpaceBrew Sliders</h1>
+		<h1>Mobile Pong</h1>
 	</div>
 
 	<div data-role="content">
 		<form id="defaults">
-			<label for="slider1">Input Slider 1:</label>
-			<input type="range" class="slider" name="slider" id="slider1" value="500" min="0" max="1023"  />
-			<label for="slider2">Input Slider 2:</label>
-			<input type="range" class="slider" name="slider" id="slider2" value="500" min="0" max="1023"  />
-			<label for="slider3">Input Slider 3:</label>
-			<input type="range" class="slider" name="slider" id="slider3" value="500" min="0" max="1023"  />
+			 <!-- TODO make slider vertical -->
+			<label for="PaddleControl">Paddle Control</label>
+			<input type="range" class="slider" name="slider" id="PaddleControl" value="500" min="0" max="1023"  />
 		</form>
 
 		</br></br>

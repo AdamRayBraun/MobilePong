@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mobile Pong</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen" charset="utf-8" />
+	<link rel="stylesheet" href="css/ButtonStyle.css" type="text/css" media="screen" charset="utf-8" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="js/sb-1.4.1.js"></script>
+
+    <script type="text/javascript">
+
+    	// when page loads call spacebrew setup function
+		$(window).on("load", setupSpacebrew);
+
+		// wher the jquery mobile is ready to initialize the UI call the setUI function
+		$(document).bind("pageinit", setupUI);
+
+		// Spacebrew Object
+		var sb
+			, app_name = "Pong connector"
+			, values = {}
+			, numberOfPlayers = 0
+			;
+
+		/**
+		 * setupSpacebrew Function that creates and configures the connection to the Spacebrew server.
+		 * 				  It is called when the page loads.
+		 */
+		function setupSpacebrew (){
+			console.log("Setting up spacebrew connection");
+			sb = new Spacebrew.Client("192.168.0.28");
+
+			sb.name(app_name);
+			sb.description("Player connection page");
+
+			sb.addSubscribe("PlayerNumber", "range");
+
+			// override Spacebrew events - this is how you catch events coming from Spacebrew
+			sb.onRangeMessage = onRangeMessage;
+
+			// connect to spacbrew
+			sb.connect();
+
+			// listen to the mouse
+			var button = document.getElementById("buttonMsg");
+			button.addEventListener("mouseup", onButtonPress);
+			button.addEventListener("mousedown", onButtonRelease);
+			button.addEventListener("touchstart", onButtonPress);
+			button.addEventListener("touchend", onButtonRelease);
+		};
+
+		function setupUI() {
+			console.log("Setting up the UI listeners");
+			// TODO redundant?
+		}
+
+		function onButtonPress (evt){
+			evt.preventDefault();
+	      	console.log("[onButtonPress] button has been pressed");
+					if (numberOfPlayers == 0 || numberOfPlayers == 10) {
+						document.location.href = 'http://192.168.0.28:8000/playerOneController.html';
+					} else if (numberOfPlayers == 1) {
+						document.location.href = 'http://192.168.0.28:8000/playerTwoController.html';
+					} else {
+						var message = "Game in progress, please wait";
+						var nameElement = document.getElementById("name");
+						nameElement.innerHTML = message;
+					}
+		}
+
+		function onButtonRelease (evt){
+			evt.preventDefault();
+	      	console.log("[onButtonRelease] button has been released");
+		}
+
+		function onRangeMessage(name, value){
+			console.log("Received new range message ", value);
+			numberOfPlayers = value;
+		};
+    </script>
+
+</head>
+<body>
+	<div id="container">
+		<h1 id="name">Join a Mobile Pong game</h1>
+		<a class="button" id="buttonMsg">Connect</a>
+		</br></br>
+</body>
+</html>
