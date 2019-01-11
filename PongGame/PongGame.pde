@@ -5,10 +5,10 @@ String description ="Pong Server";
 Spacebrew sb;
 String playerOneInput = "player1_slider";
 String playerTwoInput = "player2_slider";
-boolean playerOneConnected = false;
-boolean playerTwoConnected = false;
+boolean playerOneConnection = false;
+boolean playerTwoConnection = false;
 int numberOfPlayers = 0;
-
+int counter = millis();
 
 boolean keyboardDebugging = true;
 
@@ -182,7 +182,12 @@ void draw() {
       }
       break;
   }
-  broadcastConnections();
+
+  if (millis() > counter + 1000){
+    broadcastConnections();
+    counter = millis();
+    println(playerOneConnection + " " + playerTwoConnection);
+  }
 }
 
 // Spacebrew websocket inputs
@@ -196,22 +201,24 @@ void onRangeMessage( String name, int value ){
 }
 
 void onBooleanMessage( String name, boolean value) {
-  if (name.equals(playerOneConnected) == true) {
-    playerOneConnected = value;
-  } else if (name.equals(playerOneConnected) == true) {
-    playerTwoConnected = value;
+  println("from " + name + " val " + value);
+  if (name.equals("playerOneConnected") == true) {
+    println("workinggggggggggggg");
+    playerOneConnection = value;
+  } else if (name.equals("playerTwoConnected") == true) {
+    playerTwoConnection = value;
   }
 }
 
 void broadcastConnections(){
   // TODO find more elegant solution for this filthy hack
-  if (playerOneConnected == false && playerTwoConnected == false){
+  if (playerOneConnection == false && playerTwoConnection == false){
     numberOfPlayers = 0;
-  } else if (playerOneConnected == true && playerTwoConnected == false){
+  } else if (playerOneConnection == true && playerTwoConnection == false){
     numberOfPlayers = 1;
-  } else if (playerOneConnected == true && playerTwoConnected == true){
+  } else if (playerOneConnection == true && playerTwoConnection == true){
     numberOfPlayers = 2;
-  } else if (playerOneConnected == false && playerTwoConnected == true){
+  } else if (playerOneConnection == false && playerTwoConnection == true){
     numberOfPlayers = 10;
   }
   sb.send("numberOfPlayers", numberOfPlayers);

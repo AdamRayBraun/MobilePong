@@ -55,12 +55,12 @@
 		function onOpen() {
 			var message = "Connected as <strong>" + sb.name() + "</strong>. ";
 			$("#name").html( message );
-			sb.send("playerTwoConnection", "boolean", true);
+			sb.send("playerTwoConnection", "boolean", "true");
 			 // TODO if waiting for other player write waiting note
 		}
 
 		function onClose() {
-			sb.send("playerTwoConnection", "boolean", false);
+			sb.send("playerTwoConnection", "boolean", "false");
 		}
 
 		/**

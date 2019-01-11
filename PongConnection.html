@@ -38,6 +38,8 @@
 			sb.description("Player connection page");
 
 			sb.addSubscribe("PlayerNumber", "range");
+			sb.addPublish("playerOneConnection", "boolean", "false");
+			sb.addPublish("playerTwoConnection", "boolean", "false");
 
 			// override Spacebrew events - this is how you catch events coming from Spacebrew
 			sb.onRangeMessage = onRangeMessage;
@@ -62,8 +64,10 @@
 			evt.preventDefault();
 	      	console.log("[onButtonPress] button has been pressed");
 					if (numberOfPlayers == 0 || numberOfPlayers == 10) {
+						sb.send("playerOneConnection", "boolean", "true");
 						document.location.href = 'http://192.168.0.28:8000/playerOneController.html';
 					} else if (numberOfPlayers == 1) {
+						sb.send("playerTwoConnection", "boolean", "true");
 						document.location.href = 'http://192.168.0.28:8000/playerTwoController.html';
 					} else {
 						var message = "Game in progress, please wait";

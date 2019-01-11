@@ -20,7 +20,6 @@ class Paddle {
   // for mobile sliding
   void slide(int pos) {
     y = map(pos, 0, 1023, h/2, height);
-    println("CLASSSSY");
   }
 
   void update(){
